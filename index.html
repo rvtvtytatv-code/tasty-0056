@@ -3834,12 +3834,11 @@ renderAll = function(){
     };
 
     async function checkAndOpenFinalReviewModal(){
-        if (String(state.reviewSettings?.reviews_enabled ?? '1') !== '1') return;
-        const order = makeReviewOrder(latestOrderForReview(true));
-        if (!order || !canAutoAskReview(order)) return;
-        const modal = document.getElementById('review-modal');
-        if (modal?.classList.contains('active')) return;
-        openReviewModal(order);
+        // v2577: автоматический попап отзыва отключён.
+        // Отзыв открывается только если клиент нажал Telegram-уведомление
+        // с параметром review_order, которое админ отправляет кнопкой
+        // «Попросить оставить отзыв».
+        return;
     }
 
     const oldLoadMyOrders2566 = loadMyOrders;
