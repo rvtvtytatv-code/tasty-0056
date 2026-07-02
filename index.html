@@ -643,7 +643,7 @@
         }
 
     </style>
-    <!-- BUILD: v2581_instant_images_index_synced -->
+    <!-- BUILD: v2582_bank_payment_screenshot -->
 </head>
 <body>
 <div class="app">
@@ -689,6 +689,7 @@
                 <label id="label-payment">Способ оплаты</label>
                 <label class="radio-row"><input type="radio" name="payment_method" value="cash" checked><span id="payment-cash-label">Наличные, +20K ₫ за приём денег Grab</span></label>
                 <label class="radio-row" id="payment-qr-row"><input type="radio" name="payment_method" value="qr"><span id="payment-qr-label">QR</span></label>
+                <label class="radio-row" id="payment-bank-row"><input type="radio" name="payment_method" value="bank"><span id="payment-bank-label">Банковский перевод</span></label>
             </div>
             <div class="field"><label id="label-comment">Комментарий</label><textarea id="order-comment"></textarea></div>
             <div class="summary">
@@ -806,6 +807,7 @@
 
 <script>
 'use strict';
+// BUILD: v2582_bank_payment_screenshot
 // FIX v2528: self-hosted ngrok /app uses same-origin API. No GitHub ?api and no localhost on phone.
 
 
@@ -928,7 +930,7 @@ const state = {
     banners:[],
     reviews:[],
     reviewSettings:{reviews_enabled:'1', reviews_auto_publish:'1', review_followup_enabled:'1'},
-    paymentSettings:{payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:''},
+    paymentSettings:{payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:'', payment_bank_enabled:'1', payment_bank_details_ru:'', payment_bank_details_en:'', payment_bank_note_ru:'', payment_bank_note_en:''},
     currentQrOrder:null,
     reviewRating:5,
     reviewModalRating:5,
@@ -949,8 +951,8 @@ const state = {
 };
 
 const i18n = {
-    ru:{menu:'Меню',cart:'Корзина',profile:'Профиль',search:'Поиск блюд...',loading:'Загрузка...',all:'Все',add:'Добавить',close:'Закрыть',chooseSide:'Выберите гарнир',side:'Гарнир',needSide:'Выберите гарнир',unavailable:'Нет в наличии',cartEmpty:'Корзина пустая',name:'Имя',phone:'Телефон',type:'Получение',delivery:'Доставка',pickup:'Самовывоз',district:'Район',address:'Адрес',deliveryDateTime:'Выберите время, к которому заказ должен быть готов',deliveryDateTimeNote:'Выберите дату и время готовности.',payment:'Способ оплаты',cash:'Наличные',transfer:'Перевод',card:'Карта',comment:'Комментарий',subtotal:'Сумма блюд',deliveryFee:'Доставка/сбор',total:'Итого',checkout:'Оформить заказ',required:'Заполните обязательные поля',chooseDateTime:'Выберите дату и время готовности',confirm:'Оформить заказ?',sending:'Отправляем...',success:'Заказ оформлен',history:'История заказов',noHistory:'Заказов пока нет',free:'Бесплатно',grab:'По тарифу Grab',cashFee:'Доплата за оплату наличными',deliveryTimePrefix:'Время готовности',addOn:'Дополнительно',workingHours:'Часы работы',reviews:'Отзывы',reviewsSubtitle:'Оцените заказ или посмотрите, что пишут гости.',reviewForm:'Оставить отзыв',reviewName:'Имя',reviewRating:'Оценка',reviewText:'Отзыв',reviewPlaceholder:'Напишите пару слов',reviewSubmit:'Отправить отзыв',reviewGuests:'Отзывы гостей',reviewEmpty:'Отзывов пока нет',reviewThanks:'Спасибо! Отзыв отправлен.',reviewDisabled:'Отзывы временно отключены.',reviewLater:'Позже',reviewOrderTitle:'Оцените заказ',reviewOrderSubtitle:'Поставьте звёзды и напишите пару слов.',reviewRequired:'Поставьте оценку и напишите отзыв',noProductsAvailableTitle:'Сейчас доступных товаров нет',noProductsAvailableText:'Пожалуйста, подождите немного. Мы скоро всё обновим.',noProductsSearchEmpty:'Ничего не найдено',paymentQr:'QR',paymentQrTitle:'Оплата по QR',paymentQrSubtitle:'Отсканируйте QR-код, оплатите и загрузите скриншот подтверждения.',paymentQrMissing:'QR-код ещё не загружен администратором.',paymentQrPaid:'Подтвердить оплату',paymentQrClose:'Закрыть',paymentQrNeedOrder:'Сначала оформите заказ, потом нажмите «Я оплатил».',paymentQrSent:'Ожидаем подтверждения оплаты.',phoneInvalid:'Введите номер в формате +84 и ещё 9 цифр',paymentQrError:'Не удалось отправить уведомление об оплате',loadError:'Не удалось загрузить меню. Проверьте backend и ссылку ngrok.',retry:'Обновить',added:'Добавлено в корзину'},
-    en:{menu:'Menu',cart:'Cart',profile:'Profile',search:'Search dishes...',loading:'Loading...',all:'All',add:'Add',close:'Close',chooseSide:'Choose a side dish',side:'Side',needSide:'Choose a side dish',unavailable:'Unavailable',cartEmpty:'Cart is empty',name:'Name',phone:'Phone',type:'Type',delivery:'Delivery',pickup:'Pickup',district:'District',address:'Address',deliveryDateTime:'Ready date and time',deliveryDateTimeNote:'Choose exact ready date and time.',payment:'Payment method',cash:'Cash',transfer:'Transfer',card:'Card',comment:'Comment',subtotal:'Food subtotal',deliveryFee:'Delivery/fee',total:'Total',checkout:'Place order',required:'Fill required fields',chooseDateTime:'Choose ready date and time',confirm:'Place order?',sending:'Sending...',success:'Order placed',history:'Order history',noHistory:'No orders yet',free:'Free',grab:'Grab tariff',cashFee:'Cash payment fee',deliveryTimePrefix:'Ready time',addOn:'Add on',workingHours:'Working hours',reviews:'Reviews',reviewsSubtitle:'Rate your order or see what guests write.',reviewForm:'Leave a review',reviewName:'Name',reviewRating:'Rating',reviewText:'Review',reviewPlaceholder:'Write a few words',reviewSubmit:'Send review',reviewGuests:'Guest reviews',reviewEmpty:'No reviews yet',reviewThanks:'Thank you! Review sent.',reviewDisabled:'Reviews are temporarily disabled.',reviewLater:'Later',reviewOrderTitle:'Rate your order',reviewOrderSubtitle:'Choose stars and write a few words.',reviewRequired:'Choose a rating and write a review',noProductsAvailableTitle:'No products are available right now',noProductsAvailableText:'Please wait a little. We will update everything soon.',noProductsSearchEmpty:'Nothing found',paymentQr:'QR',paymentQrTitle:'QR payment',paymentQrSubtitle:'Scan the QR code, pay, and upload the payment screenshot.',paymentQrMissing:'QR code has not been uploaded by admin yet.',paymentQrPaid:'Confirm payment',paymentQrClose:'Close',paymentQrNeedOrder:'Place the order first, then tap “I paid”.',paymentQrSent:'Waiting for payment confirmation.',phoneInvalid:'Enter phone as +84 plus 9 digits',paymentQrError:'Failed to send payment notification',loadError:'Failed to load menu. Check backend and Cloudflare URL.',retry:'Refresh',added:'Added to cart'}
+    ru:{menu:'Меню',cart:'Корзина',profile:'Профиль',search:'Поиск блюд...',loading:'Загрузка...',all:'Все',add:'Добавить',close:'Закрыть',chooseSide:'Выберите гарнир',side:'Гарнир',needSide:'Выберите гарнир',unavailable:'Нет в наличии',cartEmpty:'Корзина пустая',name:'Имя',phone:'Телефон',type:'Получение',delivery:'Доставка',pickup:'Самовывоз',district:'Район',address:'Адрес',deliveryDateTime:'Выберите время, к которому заказ должен быть готов',deliveryDateTimeNote:'Выберите дату и время готовности.',payment:'Способ оплаты',cash:'Наличные',transfer:'Перевод',card:'Карта',comment:'Комментарий',subtotal:'Сумма блюд',deliveryFee:'Доставка/сбор',total:'Итого',checkout:'Оформить заказ',required:'Заполните обязательные поля',chooseDateTime:'Выберите дату и время готовности',confirm:'Оформить заказ?',sending:'Отправляем...',success:'Заказ оформлен',history:'История заказов',noHistory:'Заказов пока нет',free:'Бесплатно',grab:'По тарифу Grab',cashFee:'Доплата за оплату наличными',deliveryTimePrefix:'Время готовности',addOn:'Дополнительно',workingHours:'Часы работы',reviews:'Отзывы',reviewsSubtitle:'Оцените заказ или посмотрите, что пишут гости.',reviewForm:'Оставить отзыв',reviewName:'Имя',reviewRating:'Оценка',reviewText:'Отзыв',reviewPlaceholder:'Напишите пару слов',reviewSubmit:'Отправить отзыв',reviewGuests:'Отзывы гостей',reviewEmpty:'Отзывов пока нет',reviewThanks:'Спасибо! Отзыв отправлен.',reviewDisabled:'Отзывы временно отключены.',reviewLater:'Позже',reviewOrderTitle:'Оцените заказ',reviewOrderSubtitle:'Поставьте звёзды и напишите пару слов.',reviewRequired:'Поставьте оценку и напишите отзыв',noProductsAvailableTitle:'Сейчас доступных товаров нет',noProductsAvailableText:'Пожалуйста, подождите немного. Мы скоро всё обновим.',noProductsSearchEmpty:'Ничего не найдено',paymentQr:'QR',paymentBank:'Банковский перевод',paymentQrTitle:'Оплата по QR',paymentBankTitle:'Оплата банковским переводом',paymentQrSubtitle:'Отсканируйте QR-код, оплатите и загрузите скриншот подтверждения.',paymentBankSubtitle:'Переведите деньги по реквизитам и загрузите скриншот подтверждения.',paymentQrMissing:'QR-код ещё не загружен администратором.',paymentBankMissing:'Банковские реквизиты ещё не заполнены администратором.',paymentQrPaid:'Я оплатил',paymentQrClose:'Закрыть',paymentQrNeedOrder:'Сначала оформите заказ, потом нажмите «Я оплатил».',paymentQrSent:'Ожидаем подтверждения оплаты.',phoneInvalid:'Введите номер в формате +84 и ещё 9 цифр',paymentQrError:'Не удалось отправить уведомление об оплате',loadError:'Не удалось загрузить меню. Проверьте backend и ссылку ngrok.',retry:'Обновить',added:'Добавлено в корзину'},
+    en:{menu:'Menu',cart:'Cart',profile:'Profile',search:'Search dishes...',loading:'Loading...',all:'All',add:'Add',close:'Close',chooseSide:'Choose a side dish',side:'Side',needSide:'Choose a side dish',unavailable:'Unavailable',cartEmpty:'Cart is empty',name:'Name',phone:'Phone',type:'Type',delivery:'Delivery',pickup:'Pickup',district:'District',address:'Address',deliveryDateTime:'Ready date and time',deliveryDateTimeNote:'Choose exact ready date and time.',payment:'Payment method',cash:'Cash',transfer:'Transfer',card:'Card',comment:'Comment',subtotal:'Food subtotal',deliveryFee:'Delivery/fee',total:'Total',checkout:'Place order',required:'Fill required fields',chooseDateTime:'Choose ready date and time',confirm:'Place order?',sending:'Sending...',success:'Order placed',history:'Order history',noHistory:'No orders yet',free:'Free',grab:'Grab tariff',cashFee:'Cash payment fee',deliveryTimePrefix:'Ready time',addOn:'Add on',workingHours:'Working hours',reviews:'Reviews',reviewsSubtitle:'Rate your order or see what guests write.',reviewForm:'Leave a review',reviewName:'Name',reviewRating:'Rating',reviewText:'Review',reviewPlaceholder:'Write a few words',reviewSubmit:'Send review',reviewGuests:'Guest reviews',reviewEmpty:'No reviews yet',reviewThanks:'Thank you! Review sent.',reviewDisabled:'Reviews are temporarily disabled.',reviewLater:'Later',reviewOrderTitle:'Rate your order',reviewOrderSubtitle:'Choose stars and write a few words.',reviewRequired:'Choose a rating and write a review',noProductsAvailableTitle:'No products are available right now',noProductsAvailableText:'Please wait a little. We will update everything soon.',noProductsSearchEmpty:'Nothing found',paymentQr:'QR',paymentBank:'Bank transfer',paymentQrTitle:'QR payment',paymentBankTitle:'Bank transfer payment',paymentQrSubtitle:'Scan the QR code, pay, and upload the payment screenshot.',paymentBankSubtitle:'Transfer the money using the bank details and upload the payment screenshot.',paymentQrMissing:'QR code has not been uploaded by admin yet.',paymentBankMissing:'Bank details have not been filled by admin yet.',paymentQrPaid:'I paid',paymentQrClose:'Close',paymentQrNeedOrder:'Place the order first, then tap “I paid”.',paymentQrSent:'Waiting for payment confirmation.',phoneInvalid:'Enter phone as +84 plus 9 digits',paymentQrError:'Failed to send payment notification',loadError:'Failed to load menu. Check backend and Cloudflare URL.',retry:'Refresh',added:'Added to cart'}
 };
 
 function t(key){ return i18n[state.lang][key] || key; }
@@ -1197,7 +1199,7 @@ async function fetchImageForTelegram(src){
     if (!normalized) return '';
     if (normalized.startsWith('data:image') || normalized.startsWith('blob:')) return normalized;
 
-    // v2581 SPEED FIX: Cloudflare/static image URLs can be used directly.
+    // v2582 SPEED FIX: Cloudflare/static image URLs can be used directly.
     // Fetching every image into blob first made Telegram mobile feel slow.
     if (!/ngrok-free\.dev/i.test(normalized)) {
         TG_IMAGE_CACHE.set(normalized, normalized);
@@ -1375,11 +1377,13 @@ function updatePaymentLabels(){
     const type = document.getElementById('order-type')?.value || 'delivery';
     const cashLabel = document.getElementById('payment-cash-label');
     const qrLabel = document.getElementById('payment-qr-label');
+    const bankLabel = document.getElementById('payment-bank-label');
     if (cashLabel) {
         if (state.lang === 'ru') cashLabel.textContent = type === 'delivery' ? 'Наличные курьеру' : 'Наличные при самовывозе';
         else cashLabel.textContent = type === 'delivery' ? 'Cash to courier' : 'Cash on pickup';
     }
     if (qrLabel) qrLabel.textContent = state.lang === 'ru' ? 'QR-оплата' : 'QR payment';
+    if (bankLabel) bankLabel.textContent = t('paymentBank');
 }
 
 function applyTexts(){
@@ -1389,7 +1393,9 @@ function applyTexts(){
     const ids = {menu:'menu-title', cart:'cart-title', profile:'nav-profile', name:'label-name', phone:'label-phone', type:'label-type', district:'label-district', address:'label-address', deliveryDateTime:'label-delivery-datetime', deliveryDateTimeNote:'delivery-datetime-note', payment:'label-payment', cash:'payment-cash-label', comment:'label-comment', subtotal:'subtotal-label', deliveryFee:'delivery-label', total:'total-label', checkout:'checkout', history:'profile-subtitle', workingHours:'working-hours-title'};
     Object.entries(ids).forEach(([key,id]) => { const el = document.getElementById(id); if (el) el.textContent = t(key); });
     const qrLabel = document.getElementById('payment-qr-label'); if (qrLabel) qrLabel.textContent = t('paymentQr');
+    const bankLabel = document.getElementById('payment-bank-label'); if (bankLabel) bankLabel.textContent = t('paymentBank');
     const qrRow = document.getElementById('payment-qr-row'); if (qrRow) qrRow.style.display = String(state.paymentSettings?.payment_qr_enabled ?? '1') === '1' ? 'flex' : 'none';
+    const bankRow = document.getElementById('payment-bank-row'); if (bankRow) bankRow.style.display = String(state.paymentSettings?.payment_bank_enabled ?? '1') === '1' ? 'flex' : 'none';
     updatePaymentLabels();
     updateTelegramUserCard();
     document.getElementById('nav-menu').textContent = t('menu');
@@ -1999,6 +2005,24 @@ function paymentQrNote(){
         ? (state.paymentSettings?.payment_qr_note_ru || '')
         : (state.paymentSettings?.payment_qr_note_en || state.paymentSettings?.payment_qr_note_ru || '');
 }
+function isConfirmPaymentMethod(method){ return ['qr','bank'].includes(String(method || '').toLowerCase()); }
+function paymentMethodOfOrder(order){ return String(order?.payment_method || order?.paymentMethod || '').toLowerCase() || 'qr'; }
+function paymentBankDetails(){
+    return state.lang === 'ru'
+        ? (state.paymentSettings?.payment_bank_details_ru || '')
+        : (state.paymentSettings?.payment_bank_details_en || state.paymentSettings?.payment_bank_details_ru || '');
+}
+function paymentBankNote(){
+    return state.lang === 'ru'
+        ? (state.paymentSettings?.payment_bank_note_ru || '')
+        : (state.paymentSettings?.payment_bank_note_en || state.paymentSettings?.payment_bank_note_ru || '');
+}
+function paymentMethodLabel(method){
+    method = String(method || '').toLowerCase();
+    if (method === 'qr') return 'QR';
+    if (method === 'bank') return t('paymentBank');
+    return t('cash');
+}
 
 function openPaymentQrModal(order = null){
     if (order) state.currentQrOrder = order;
@@ -2007,30 +2031,42 @@ function openPaymentQrModal(order = null){
     const img = document.getElementById('payment-qr-image');
     const placeholder = document.getElementById('payment-qr-placeholder');
     const note = document.getElementById('payment-qr-note');
-    const src = paymentQrImage();
+    const title = document.getElementById('payment-qr-title');
+    const subtitle = document.getElementById('payment-qr-subtitle');
+    const method = paymentMethodOfOrder(state.currentQrOrder || order || {});
+
+    if (title) title.textContent = method === 'bank' ? t('paymentBankTitle') : t('paymentQrTitle');
+    if (subtitle) subtitle.textContent = method === 'bank' ? t('paymentBankSubtitle') : t('paymentQrSubtitle');
 
     if (img && placeholder) {
-        if (src) {
-            // FIX v2561: Telegram WebView/ngrok can block ordinary <img src=...> requests.
-            // QR is loaded the same way as product photos: fetch with ngrok-skip-browser-warning,
-            // then replace src with a blob URL. This prevents an empty QR image in Telegram.
-            img.src = PLACEHOLDER_IMG;
-            img.setAttribute('data-img-src', src);
-            delete img.dataset.loadingRealImage;
-            img.style.display = 'block';
-            placeholder.style.display = 'none';
-            setTimeout(() => hydrateTelegramImages(modal || document), 20);
-        } else {
+        if (method === 'bank') {
             img.removeAttribute('src');
             img.removeAttribute('data-img-src');
             delete img.dataset.loadingRealImage;
             img.style.display = 'none';
             placeholder.style.display = 'block';
-            placeholder.textContent = t('paymentQrMissing');
+            placeholder.textContent = paymentBankDetails() || t('paymentBankMissing');
+        } else {
+            const src = paymentQrImage();
+            if (src) {
+                img.src = PLACEHOLDER_IMG;
+                img.setAttribute('data-img-src', src);
+                delete img.dataset.loadingRealImage;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                setTimeout(() => hydrateTelegramImages(modal || document), 20);
+            } else {
+                img.removeAttribute('src');
+                img.removeAttribute('data-img-src');
+                delete img.dataset.loadingRealImage;
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+                placeholder.textContent = t('paymentQrMissing');
+            }
         }
     }
 
-    if (note) note.textContent = paymentQrNote();
+    if (note) note.textContent = method === 'bank' ? paymentBankNote() : paymentQrNote();
     const shot = document.getElementById('payment-screenshot');
     if (shot) shot.value = '';
     const shotLabel = document.getElementById('payment-shot-label');
@@ -2053,6 +2089,7 @@ async function submitQrPaid(){
     const fileInput = document.getElementById('payment-screenshot');
     const file = fileInput?.files?.[0] || null;
     if (!file) {
+        try { fileInput?.click(); } catch (e) {}
         tg.showAlert(state.lang === 'en' ? 'Upload payment screenshot' : 'Загрузите скриншот оплаты');
         return;
     }
@@ -2155,7 +2192,7 @@ async function sendOrder(){
             localStorage.setItem('toh_name', order.apiPayload.customer_name || '');
             localStorage.setItem('toh_phone', order.apiPayload.phone || '');
             const result = await apiPost('/api/orders', order.apiPayload);
-            const reviewOrder = {order_id:result.order_id || '', order_number:result.order_number || '', customer_name:order.localView.customerName || order.apiPayload.customer_name || '', telegram_user_id:order.localView.telegramUserId || order.apiPayload.telegram_user_id || '', username:order.localView.username || order.apiPayload.username || ''};
+            const reviewOrder = {order_id:result.order_id || '', id:result.order_id || '', order_number:result.order_number || '', customer_name:order.localView.customerName || order.apiPayload.customer_name || '', telegram_user_id:order.localView.telegramUserId || order.apiPayload.telegram_user_id || '', username:order.localView.username || order.apiPayload.username || '', payment_method:result.payment_method || order.apiPayload.payment_method, payment_status:result.payment_status || ''};
             applyLocalStockReduction(order.apiPayload.items);
             state.history.unshift({...order.localView, order_id:result.order_id || '', payment_method:result.payment_method || order.apiPayload.payment_method, payment_status:result.payment_status || '', orderNumber:result.order_number ? `#${result.order_number}` : '', total:result.total_formatted || order.localView.total});
             saveHistory();
@@ -2166,7 +2203,7 @@ async function sendOrder(){
             await loadMyOrders();
             renderAll(); switchTab('profile');
             tg.showAlert(`${t('success')}${result.order_number ? ': #' + result.order_number : ''}`);
-            if ((result.payment_method || order.apiPayload.payment_method) === 'qr') setTimeout(() => openPaymentQrModal(reviewOrder), 700);
+            if (isConfirmPaymentMethod(result.payment_method || order.apiPayload.payment_method)) setTimeout(() => openPaymentQrModal(reviewOrder), 700);
         } catch (error) {
             console.error(error);
             await refreshMenuAndCartAfterStockChange(true);
@@ -2242,8 +2279,8 @@ function renderServerOrder(order){
     const total = formatPrice(order.total || 0);
     const statusLabel = state.lang === 'en' ? (order.status_label_en || '') : (order.status_label_ru || '');
     const typeLabel = order.order_type === 'pickup' ? t('pickup') : t('delivery');
-    const paymentLabel = order.payment_method === 'qr' ? 'QR' : t('cash');
-    const canPay = order.can_pay_qr || (order.payment_method === 'qr' && (order.payment_status || '') === 'waiting_payment');
+    const paymentLabel = paymentMethodLabel(order.payment_method);
+    const canPay = order.can_pay_qr || (isConfirmPaymentMethod(order.payment_method) && (order.payment_status || '') === 'waiting_payment');
     return `<div class="order-card" data-open-order="${escapeHtml(order.id || '')}">
         <div class="order-card-top"><div><div class="order-number">${escapeHtml(number)}</div><div class="order-date">${escapeHtml(order.created_at || '')}</div></div><div class="order-total">${escapeHtml(total)}</div></div>
         <div><span class="order-chip">${escapeHtml(typeLabel)}</span><span class="order-chip">${escapeHtml(paymentLabel)}</span><span class="order-chip">${escapeHtml(statusLabel)}</span></div>
@@ -2291,10 +2328,15 @@ function findOrderById(orderId){
 }
 function renderDetailQrPayment(order, canPay){
     if (!canPay) return '';
+    const method = paymentMethodOfOrder(order);
     const src = paymentQrImage();
+    const title = method === 'bank' ? t('paymentBankTitle') : t('paymentQrTitle');
+    const details = method === 'bank' ? (paymentBankDetails() || t('paymentBankMissing')) : '';
     return `<div class="detail-pay-panel">
-        <div class="detail-pay-title">${state.lang === 'en' ? 'QR payment' : 'Оплата по QR'}</div>
-        ${src ? `<img class="detail-qr-image" src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(src)}" alt="QR">` : `<div class="detail-qr-placeholder">${escapeHtml(t('paymentQrMissing'))}</div>`}
+        <div class="detail-pay-title">${escapeHtml(title)}</div>
+        ${method === 'bank'
+            ? `<div class="detail-qr-placeholder">${escapeHtml(details)}</div>`
+            : (src ? `<img class="detail-qr-image" src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(src)}" alt="QR">` : `<div class="detail-qr-placeholder">${escapeHtml(t('paymentQrMissing'))}</div>`)}
         <button type="button" class="pay-main-btn" data-pay-order="${escapeHtml(order.id || order.order_id || '')}">${state.lang === 'en' ? 'I paid' : 'Я оплатил'}</button>
     </div>`;
 }
@@ -2305,7 +2347,7 @@ function renderOrderDetail(order){
     const total = (order.total_formatted && !/nan|undefined|не чис/i.test(String(order.total_formatted))) ? order.total_formatted : formatPrice(order.total || order.total_price || 0);
     const statusLabel = state.lang === 'en' ? (order.status_label_en || '') : (order.status_label_ru || '');
     const typeLabel = order.order_type === 'pickup' ? t('pickup') : t('delivery');
-    const canPay = order.can_pay_qr || (order.payment_method === 'qr' && (order.payment_status || '') === 'waiting_payment');
+    const canPay = order.can_pay_qr || (isConfirmPaymentMethod(order.payment_method) && (order.payment_status || '') === 'waiting_payment');
     return `
         <div class="detail-hero">
             <div style="font-weight:900;font-size:13px;opacity:.75;">Заказ ${escapeHtml(number)}</div>
@@ -2323,7 +2365,7 @@ function renderOrderDetail(order){
         ${renderDetailQrPayment(order, canPay)}
         <div class="detail-block">
             <div class="detail-block-title">Детали</div>
-            <div class="detail-item"><span>Оплата</span><strong>${order.payment_method === 'qr' ? 'QR' : t('cash')}</strong></div>
+            <div class="detail-item"><span>Оплата</span><strong>${escapeHtml(paymentMethodLabel(order.payment_method))}</strong></div>
             <div class="detail-item"><span>Получение</span><strong>${escapeHtml(typeLabel)}</strong></div>
             ${order.delivery_datetime ? `<div class="detail-item"><span>${escapeHtml(t('deliveryTimePrefix'))}</span><strong>${escapeHtml(order.delivery_datetime)}</strong></div>` : ''}
         </div>
@@ -2544,7 +2586,7 @@ async function loadData(){
                 apiGet('/api/settings/working-hours').catch(() => ({working_hours:'', working_hours_ru:'', working_hours_en:''})),
                 apiGet('/api/reviews').catch(() => []),
                 apiGet('/api/settings/reviews').catch(() => ({reviews_enabled:'1', reviews_auto_publish:'1', review_followup_enabled:'1'})),
-                apiGet('/api/settings/payment').catch(() => ({payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:''}))
+                apiGet('/api/settings/payment').catch(() => ({payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:'', payment_bank_enabled:'1', payment_bank_details_ru:'', payment_bank_details_en:'', payment_bank_note_ru:'', payment_bank_note_en:''}))
             ]);
             safeLocalStorageSet('toh_api_base_url', APP_CONFIG.API_BASE_URL);
             state.categories = Array.isArray(storefront?.categories) ? storefront.categories : [];
@@ -2554,7 +2596,7 @@ async function loadData(){
             state.deliverySettings = Array.isArray(delivery) ? delivery : [];
             state.reviews = Array.isArray(reviews) ? reviews : [];
             state.reviewSettings = reviewSettings || {reviews_enabled:'1', reviews_auto_publish:'1', review_followup_enabled:'1'};
-            state.paymentSettings = paymentSettings || {payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:''};
+            state.paymentSettings = paymentSettings || {payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:'', payment_bank_enabled:'1', payment_bank_details_ru:'', payment_bank_details_en:'', payment_bank_note_ru:'', payment_bank_note_en:''};
             state.workingHours = workingHours?.working_hours || '';
             state.workingHoursRu = workingHours?.working_hours_ru || workingHours?.working_hours || '';
             state.workingHoursEn = workingHours?.working_hours_en || workingHours?.working_hours || '';
@@ -2705,7 +2747,7 @@ function orderPreview(order){
     return {src,name,meta};
 }
 function orderTypeLabel(order){ return order?.order_type === 'pickup' ? (state.lang === 'en' ? 'Pickup' : 'Самовывоз') : (state.lang === 'en' ? 'Delivery' : 'Доставка'); }
-function orderPaymentLabel(order){ return order?.payment_method === 'qr' ? 'QR' : (state.lang === 'en' ? 'Cash' : 'Наличные'); }
+function orderPaymentLabel(order){ return paymentMethodLabel(order?.payment_method); }
 function orderStatusLabelView(order){ return state.lang === 'en' ? (order?.status_label_en || order?.status_info?.label_en || '') : (order?.status_label_ru || order?.status_info?.label_ru || ''); }
 function renderServerOrder(order){
     const number = order.order_number ? '#' + order.order_number : (order.orderNumber || '');
@@ -2749,8 +2791,8 @@ function renderOrderDetail(order){
     if (!order) return `<div class="empty">${state.lang === 'en' ? 'Order not found' : 'Заказ не найден'}</div>`;
     const number = order.order_number ? '#' + order.order_number : (order.orderNumber || '');
     const total = formatOrderMoney(order);
-    const canPay = order.can_pay_qr || (order.payment_method === 'qr' && (order.payment_status || '') === 'waiting_payment');
-    const payStatus = order.payment_status === 'confirmed' ? (state.lang === 'en' ? 'Paid' : 'Оплачено') : (order.payment_method === 'qr' ? (state.lang === 'en' ? 'Waiting for payment' : 'Ожидает оплаты') : '');
+    const canPay = order.can_pay_qr || (isConfirmPaymentMethod(order.payment_method) && (order.payment_status || '') === 'waiting_payment');
+    const payStatus = order.payment_status === 'confirmed' ? (state.lang === 'en' ? 'Paid' : 'Оплачено') : (isConfirmPaymentMethod(order.payment_method) ? (state.lang === 'en' ? 'Waiting for payment' : 'Ожидает оплаты') : '');
     return `
         <div class="detail-hero">
             <div style="font-weight:900;font-size:13px;opacity:.78;">${state.lang === 'en' ? 'Order' : 'Заказ'} ${escapeHtml(number)}</div>
@@ -3402,7 +3444,7 @@ setTimeout(() => updatePhone84Input(true), 100);
                 localStorage.setItem('toh_name', order.apiPayload.customer_name || '');
                 localStorage.setItem('toh_phone', order.apiPayload.phone || '');
                 const result = await apiPost('/api/orders', order.apiPayload);
-                const reviewOrder = {order_id:result.order_id || '', order_number:result.order_number || '', customer_name:order.localView.customerName || order.apiPayload.customer_name || '', telegram_user_id:order.localView.telegramUserId || order.apiPayload.telegram_user_id || '', username:order.localView.username || order.apiPayload.username || ''};
+                const reviewOrder = {order_id:result.order_id || '', id:result.order_id || '', order_number:result.order_number || '', customer_name:order.localView.customerName || order.apiPayload.customer_name || '', telegram_user_id:order.localView.telegramUserId || order.apiPayload.telegram_user_id || '', username:order.localView.username || order.apiPayload.username || '', payment_method:result.payment_method || order.apiPayload.payment_method, payment_status:result.payment_status || ''};
                 state.history.unshift({...order.localView, order_id:result.order_id || '', payment_method:result.payment_method || order.apiPayload.payment_method, payment_status:result.payment_status || '', orderNumber:result.order_number ? `#${result.order_number}` : '', total:result.total_formatted || order.localView.total});
                 saveHistory();
                 state.cart = [];
@@ -3415,7 +3457,7 @@ setTimeout(() => updatePhone84Input(true), 100);
                 renderAll();
                 switchTab('profile');
                 tg.showAlert(`${t('success')}${result.order_number ? ': #' + result.order_number : ''}`);
-                if ((result.payment_method || order.apiPayload.payment_method) === 'qr') setTimeout(() => openPaymentQrModal(reviewOrder), 700);
+                if (isConfirmPaymentMethod(result.payment_method || order.apiPayload.payment_method)) setTimeout(() => openPaymentQrModal(reviewOrder), 700);
             } catch (error) {
                 console.error(error);
                 await refreshStoreAfterOrderChange();
@@ -3642,7 +3684,7 @@ renderAll = function(){
 
                 tg.showAlert(`${t('success')}${result.order_number ? ': #' + result.order_number : ''}`);
 
-                if ((result.payment_method || order.apiPayload.payment_method) === 'qr') {
+                if (isConfirmPaymentMethod(result.payment_method || order.apiPayload.payment_method)) {
                     setTimeout(() => openPaymentQrModal(reviewOrder), 500);
                 }
             } catch (error) {
@@ -4423,15 +4465,15 @@ loadData();
 
 
 <script>
-// ===== FIX v2581: review popup + instant image loading =====
+// ===== FIX v2582: review popup + instant image loading =====
 (function(){
-    function reviewParam2581(){
+    function reviewParam2582(){
         try {
             const params = new URLSearchParams(window.location.search || '');
             return String(params.get('review_order') || params.get('reviewOrder') || params.get('order_id') || '').trim();
         } catch(e) { return ''; }
     }
-    async function findReviewOrder2581(orderId){
+    async function findReviewOrder2582(orderId){
         orderId = String(orderId || '').trim();
         if (!orderId) return null;
         const local = (state.orders || []).find(o => String(o.id || o.order_id || '') === orderId || String(o.order_number || o.orderNumber || '') === orderId);
@@ -4448,24 +4490,24 @@ loadData();
         }
         return { id: orderId, order_id: orderId, order_number: '', customer_name: currentTelegramName(), telegram_user_id: telegramUserId() };
     }
-    window.openRequestedReviewPopup2581 = async function(){
-        const orderId = reviewParam2581();
+    window.openRequestedReviewPopup2582 = async function(){
+        const orderId = reviewParam2582();
         if (!orderId || state._reviewRequestPopupOpened === orderId) return;
         state._reviewRequestPopupOpened = orderId;
         try { await loadMyOrders().catch(() => []); } catch(e) {}
-        const order = await findReviewOrder2581(orderId);
+        const order = await findReviewOrder2582(orderId);
         switchTab('reviews');
         setTimeout(() => openReviewModal(order), 120);
     };
-    const oldLoadData2581 = window.loadData || loadData;
+    const oldLoadData2582 = window.loadData || loadData;
     window.loadData = loadData = async function(){
-        const result = await oldLoadData2581.apply(this, arguments);
-        if (reviewParam2581()) setTimeout(() => openRequestedReviewPopup2581(), 100);
+        const result = await oldLoadData2582.apply(this, arguments);
+        if (reviewParam2582()) setTimeout(() => openRequestedReviewPopup2582(), 100);
         return result;
     };
-    setTimeout(() => { if (reviewParam2581()) openRequestedReviewPopup2581(); }, 800);
+    setTimeout(() => { if (reviewParam2582()) openRequestedReviewPopup2582(); }, 800);
 })();
-// ===== /FIX v2581 =====
+// ===== /FIX v2582 =====
 </script>
 </body>
 </html>
