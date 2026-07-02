@@ -1196,6 +1196,13 @@ async function fetchImageForTelegram(src){
     if (!normalized) return '';
     if (normalized.startsWith('data:image') || normalized.startsWith('blob:')) return normalized;
 
+    // v2579 SPEED FIX: Cloudflare/static image URLs can be used directly.
+    // Fetching every image into blob first made Telegram mobile feel slow.
+    if (!/ngrok-free\.dev/i.test(normalized)) {
+        TG_IMAGE_CACHE.set(normalized, normalized);
+        return normalized;
+    }
+
     if (TG_IMAGE_CACHE.has(normalized)) return TG_IMAGE_CACHE.get(normalized);
 
     try {
@@ -1203,8 +1210,7 @@ async function fetchImageForTelegram(src){
             method:'GET',
             cache:'force-cache',
             headers:{
-                'ngrok-skip-browser-warning':'true',
-                'Cache-Control':'no-cache'
+                'ngrok-skip-browser-warning':'true'
             }
         });
         if (!response.ok) throw new Error('image HTTP ' + response.status);
@@ -1253,11 +1259,11 @@ function hydrateTelegramImages(root){
 
 function imageOf(item){
     const candidates = [
-        item?.image_data_url,
-        item?.image_url,
-        item?.image_full_url,
         item?.image_thumb_url,
         item?.img,
+        item?.image_url,
+        item?.image_full_url,
+        item?.image_data_url,
         item?.image,
         item?.photo
     ];
@@ -1270,7 +1276,7 @@ function imageOf(item){
 
 function storageImageOf(item){
     // В localStorage нельзя сохранять base64-картинки: они быстро переполняют память браузера.
-    const candidates = [item?.image_url, item?.image_full_url, item?.image_thumb_url, item?.img, item?.image, item?.photo];
+    const candidates = [item?.image_thumb_url, item?.img, item?.image_url, item?.image_full_url, item?.image, item?.photo];
     for (const raw of candidates) {
         if (!raw || String(raw).startsWith('data:image')) continue;
         const src = normalizeBackendAssetSrc(raw);
@@ -2527,10 +2533,12 @@ async function loadData(){
         APP_CONFIG.API_BASE_URL = cleanBaseUrl(candidate);
         console.log('Пробую backend:', APP_CONFIG.API_BASE_URL);
         try {
-            const [categories, banners, menu, delivery, workingHours, reviews, reviewSettings, paymentSettings] = await Promise.all([
-                apiGet('/api/categories').catch(() => []),
-                apiGet('/api/banners').catch(() => []),
-                apiGet('/api/menu'),
+            const [storefront, delivery, workingHours, reviews, reviewSettings, paymentSettings] = await Promise.all([
+                apiGet('/api/storefront').catch(async () => ({
+                    categories: await apiGet('/api/categories').catch(() => []),
+                    banners: await apiGet('/api/banners').catch(() => []),
+                    products: await apiGet('/api/menu')
+                })),
                 apiGet('/api/delivery/settings').catch(() => []),
                 apiGet('/api/settings/working-hours').catch(() => ({working_hours:'', working_hours_ru:'', working_hours_en:''})),
                 apiGet('/api/reviews').catch(() => []),
@@ -2538,9 +2546,10 @@ async function loadData(){
                 apiGet('/api/settings/payment').catch(() => ({payment_qr_enabled:'1', payment_qr_image_url:'', payment_qr_image_full_url:'', payment_qr_image_data_url:'', payment_qr_note_ru:'', payment_qr_note_en:''}))
             ]);
             safeLocalStorageSet('toh_api_base_url', APP_CONFIG.API_BASE_URL);
-            state.categories = Array.isArray(categories) ? categories : [];
-            state.banners = Array.isArray(banners) ? banners : [];
-            state.products = Array.isArray(menu) ? menu.map(normalizeProduct).filter(isProductVisibleForClient).sort((a,b) => a.sort_order - b.sort_order) : [];
+            state.categories = Array.isArray(storefront?.categories) ? storefront.categories : [];
+            state.banners = Array.isArray(storefront?.banners) ? storefront.banners : [];
+            const menu = Array.isArray(storefront?.products) ? storefront.products : [];
+            state.products = menu.map(normalizeProduct).filter(isProductVisibleForClient).sort((a,b) => a.sort_order - b.sort_order);
             state.deliverySettings = Array.isArray(delivery) ? delivery : [];
             state.reviews = Array.isArray(reviews) ? reviews : [];
             state.reviewSettings = reviewSettings || {reviews_enabled:'1', reviews_auto_publish:'1', review_followup_enabled:'1'};
@@ -4411,5 +4420,51 @@ loadData();
 // ===== /FIX v2575 =====
 </script>
 
+
+<script>
+// ===== FIX v2579: manual review button opens Mini App review popup + faster image loading =====
+(function(){
+    function reviewParam2579(){
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            return String(params.get('review_order') || params.get('reviewOrder') || params.get('order_id') || '').trim();
+        } catch(e) { return ''; }
+    }
+    async function findReviewOrder2579(orderId){
+        orderId = String(orderId || '').trim();
+        if (!orderId) return null;
+        const local = (state.orders || []).find(o => String(o.id || o.order_id || '') === orderId || String(o.order_number || o.orderNumber || '') === orderId);
+        if (local) return local;
+        try {
+            const order = await apiGet('/api/orders/' + encodeURIComponent(orderId));
+            if (order && (order.id || order.order_id)) {
+                const exists = (state.orders || []).some(o => String(o.id || o.order_id || '') === String(order.id || order.order_id || ''));
+                if (!exists) state.orders = [order].concat(state.orders || []);
+                return order;
+            }
+        } catch(e) {
+            console.warn('review order direct load failed', e);
+        }
+        return { id: orderId, order_id: orderId, order_number: '', customer_name: currentTelegramName(), telegram_user_id: telegramUserId() };
+    }
+    window.openRequestedReviewPopup2579 = async function(){
+        const orderId = reviewParam2579();
+        if (!orderId || state._reviewRequestPopupOpened === orderId) return;
+        state._reviewRequestPopupOpened = orderId;
+        try { await loadMyOrders().catch(() => []); } catch(e) {}
+        const order = await findReviewOrder2579(orderId);
+        switchTab('reviews');
+        setTimeout(() => openReviewModal(order), 120);
+    };
+    const oldLoadData2579 = window.loadData || loadData;
+    window.loadData = loadData = async function(){
+        const result = await oldLoadData2579.apply(this, arguments);
+        if (reviewParam2579()) setTimeout(() => openRequestedReviewPopup2579(), 100);
+        return result;
+    };
+    setTimeout(() => { if (reviewParam2579()) openRequestedReviewPopup2579(); }, 800);
+})();
+// ===== /FIX v2579 =====
+</script>
 </body>
 </html>
