@@ -643,6 +643,7 @@
         }
 
     </style>
+    <!-- BUILD: v2581_instant_images_index_synced -->
 </head>
 <body>
 <div class="app">
@@ -1196,7 +1197,7 @@ async function fetchImageForTelegram(src){
     if (!normalized) return '';
     if (normalized.startsWith('data:image') || normalized.startsWith('blob:')) return normalized;
 
-    // v2579 SPEED FIX: Cloudflare/static image URLs can be used directly.
+    // v2581 SPEED FIX: Cloudflare/static image URLs can be used directly.
     // Fetching every image into blob first made Telegram mobile feel slow.
     if (!/ngrok-free\.dev/i.test(normalized)) {
         TG_IMAGE_CACHE.set(normalized, normalized);
@@ -1602,7 +1603,7 @@ function renderProducts(){
         return;
     }
 
-    box.innerHTML = list.map(p => { const stock = stockText(p); const time = timeText(p); return `<article class="product" data-product="${escapeHtml(p.id)}">${p.badge ? `<div class="badge">${escapeHtml(p.badge)}</div>` : ''}<img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(p.img)}" alt="" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'"><div class="product-body"><div class="product-name">${escapeHtml(productName(p))}</div>${p.weight ? `<div class="product-weight">${escapeHtml(p.weight)}</div>` : ''}${(stock || time) ? `<div class="product-meta-row">${stock ? `<span class="product-stock-pill ${Number(p.stock) <= 3 ? 'low' : ''}">📦 ${escapeHtml(stock)}</span>` : ''}${time ? `<span class="product-time-pill">⏱ ${escapeHtml(time)}</span>` : ''}</div>` : ''}${p.side_options.length ? `<div class="side-mark">${t('side')}: ${p.side_options.map(optionLabel).map(escapeHtml).join(' / ')}</div>` : ''}<div class="product-bottom"><div class="price">${formatPrice(p.price)}</div><button class="add" type="button" data-add="${escapeHtml(p.id)}">+</button></div></div></article>`; }).join('');
+    box.innerHTML = list.map(p => { const stock = stockText(p); const time = timeText(p); return `<article class="product" data-product="${escapeHtml(p.id)}">${p.badge ? `<div class="badge">${escapeHtml(p.badge)}</div>` : ''}<img src="${escapeHtml(p.img || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(p.img)}" alt="" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'"><div class="product-body"><div class="product-name">${escapeHtml(productName(p))}</div>${p.weight ? `<div class="product-weight">${escapeHtml(p.weight)}</div>` : ''}${(stock || time) ? `<div class="product-meta-row">${stock ? `<span class="product-stock-pill ${Number(p.stock) <= 3 ? 'low' : ''}">📦 ${escapeHtml(stock)}</span>` : ''}${time ? `<span class="product-time-pill">⏱ ${escapeHtml(time)}</span>` : ''}</div>` : ''}${p.side_options.length ? `<div class="side-mark">${t('side')}: ${p.side_options.map(optionLabel).map(escapeHtml).join(' / ')}</div>` : ''}<div class="product-bottom"><div class="price">${formatPrice(p.price)}</div><button class="add" type="button" data-add="${escapeHtml(p.id)}">+</button></div></div></article>`; }).join('');
     hydrateTelegramImages(box);
 }
 
@@ -1879,7 +1880,7 @@ function renderCart(){
     } else {
         list.innerHTML = state.cart.map((item, index) => `
             <div class="cart-item" data-cart-index="${index}">
-                <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(cartDisplayImage(item))}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
+                <img src="${escapeHtml(cartDisplayImage(item) || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(cartDisplayImage(item))}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
 
                 <div class="cart-main">
                     <div class="cart-name">${escapeHtml(item.name)}</div>
@@ -2275,7 +2276,7 @@ function detailItemsHtml(order){
         const img = orderItemImageSrc(item);
         const name = orderItemName(item);
         return `<div class="detail-product">
-            <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(img)}" alt="">
+            <img src="${escapeHtml(img || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(img)}" alt="">
             <div class="detail-product-main">
                 <div class="detail-product-name">${escapeHtml(name)}</div>
                 ${side ? `<div class="detail-product-meta">${escapeHtml(cleanOrderExtraText(side))}</div>` : ''}
@@ -2718,7 +2719,7 @@ function renderServerOrder(order){
         </div>
         <div class="order-chips"><span class="order-chip">${escapeHtml(orderTypeLabel(order))}</span><span class="order-chip">${escapeHtml(orderPaymentLabel(order))}</span>${orderStatusLabelView(order) ? `<span class="order-chip">${escapeHtml(orderStatusLabelView(order))}</span>` : ''}</div>
         ${when ? `<div class="order-card-preview-meta" style="margin:8px 0 0;">⏱ ${escapeHtml(when)}</div>` : ''}
-        <div class="order-card-preview"><img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(preview.src)}" alt=""><div class="order-card-preview-main"><div class="order-card-preview-name">${escapeHtml(preview.name)}</div><div class="order-card-preview-meta">${escapeHtml(preview.meta)}</div></div></div>
+        <div class="order-card-preview"><img src="${escapeHtml(preview.src || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(preview.src)}" alt=""><div class="order-card-preview-main"><div class="order-card-preview-name">${escapeHtml(preview.name)}</div><div class="order-card-preview-meta">${escapeHtml(preview.meta)}</div></div></div>
         ${renderStatusTrack(order)}
         <button type="button" class="order-open-btn" data-open-order="${escapeHtml(order.id || order.order_id || '')}">${state.lang === 'en' ? 'Open order' : 'Открыть заказ'}</button>
     </article>`;
@@ -2734,7 +2735,7 @@ function detailItemsHtml(order){
         const qty = moneyValue(item.qty,1) || 1;
         const total = formatPrice(itemTotalMoney(item));
         return `<div class="detail-product">
-            <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(img)}" alt="">
+            <img src="${escapeHtml(img || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(img)}" alt="">
             <div class="detail-product-main">
                 <div class="detail-product-name">${escapeHtml(name)}</div>
                 ${side ? `<div class="detail-product-meta">${escapeHtml(side)}</div>` : ''}
@@ -3979,7 +3980,7 @@ loadData();
         if (!products.length) return '';
         return `<div class="review-products-list">${products.map(p => `
             <div class="review-product-card">
-                <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(p.src)}" alt="">
+                <img src="${escapeHtml(p.src || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(p.src)}" alt="">
                 <div class="review-product-title">${escapeHtml(p.name)}</div>
             </div>
         `).join('')}</div>`;
@@ -4092,7 +4093,7 @@ loadData();
         if (!products.length) return '';
         return `<div class="review-products-list">${products.map(p => `
             <div class="review-product-card">
-                <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(p.src || '')}" alt="">
+                <img src="${escapeHtml(p.src || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(p.src || '')}" alt="">
                 <div class="review-product-title">${escapeHtml(p.name)}</div>
             </div>
         `).join('')}</div>`;
@@ -4237,7 +4238,7 @@ loadData();
         if (!products.length) return '';
         return `<div class="review-products-list">${products.map(p => `
             <div class="review-product-card">
-                <img src="${PLACEHOLDER_IMG}" data-img-src="${escapeHtml(p.src || '')}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'" alt="">
+                <img src="${escapeHtml(p.src || PLACEHOLDER_IMG)}" data-img-src="${escapeHtml(p.src || '')}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'" alt="">
                 <div class="review-product-title">${escapeHtml(p.name)}</div>
             </div>
         `).join('')}</div>`;
@@ -4422,15 +4423,15 @@ loadData();
 
 
 <script>
-// ===== FIX v2579: manual review button opens Mini App review popup + faster image loading =====
+// ===== FIX v2581: review popup + instant image loading =====
 (function(){
-    function reviewParam2579(){
+    function reviewParam2581(){
         try {
             const params = new URLSearchParams(window.location.search || '');
             return String(params.get('review_order') || params.get('reviewOrder') || params.get('order_id') || '').trim();
         } catch(e) { return ''; }
     }
-    async function findReviewOrder2579(orderId){
+    async function findReviewOrder2581(orderId){
         orderId = String(orderId || '').trim();
         if (!orderId) return null;
         const local = (state.orders || []).find(o => String(o.id || o.order_id || '') === orderId || String(o.order_number || o.orderNumber || '') === orderId);
@@ -4447,24 +4448,24 @@ loadData();
         }
         return { id: orderId, order_id: orderId, order_number: '', customer_name: currentTelegramName(), telegram_user_id: telegramUserId() };
     }
-    window.openRequestedReviewPopup2579 = async function(){
-        const orderId = reviewParam2579();
+    window.openRequestedReviewPopup2581 = async function(){
+        const orderId = reviewParam2581();
         if (!orderId || state._reviewRequestPopupOpened === orderId) return;
         state._reviewRequestPopupOpened = orderId;
         try { await loadMyOrders().catch(() => []); } catch(e) {}
-        const order = await findReviewOrder2579(orderId);
+        const order = await findReviewOrder2581(orderId);
         switchTab('reviews');
         setTimeout(() => openReviewModal(order), 120);
     };
-    const oldLoadData2579 = window.loadData || loadData;
+    const oldLoadData2581 = window.loadData || loadData;
     window.loadData = loadData = async function(){
-        const result = await oldLoadData2579.apply(this, arguments);
-        if (reviewParam2579()) setTimeout(() => openRequestedReviewPopup2579(), 100);
+        const result = await oldLoadData2581.apply(this, arguments);
+        if (reviewParam2581()) setTimeout(() => openRequestedReviewPopup2581(), 100);
         return result;
     };
-    setTimeout(() => { if (reviewParam2579()) openRequestedReviewPopup2579(); }, 800);
+    setTimeout(() => { if (reviewParam2581()) openRequestedReviewPopup2581(); }, 800);
 })();
-// ===== /FIX v2579 =====
+// ===== /FIX v2581 =====
 </script>
 </body>
 </html>
